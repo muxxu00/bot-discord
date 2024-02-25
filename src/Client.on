@@ -1,0 +1,252 @@
+Client.on("message", msg => {
+    if(msg.content === "!cmd"){
+        const embed = new Discord.MessageEmbed()
+            .setTitle("Listes des commandes :")
+            .setColor('#FFFF00')
+            .addFields(
+                {name : "!5v5 [valeur]", value : "Pour préparer un 5v5, [valeur] contient l'horaire de la 5v5 *(peut être vide et modifiable par la commande !heure* )"},
+                {name : "!info", value : "Pour avoir les infos de la 5v5 en préparation **A utiliser pendant que !5v5 est actif** "},
+                {name : "!heure [valeur]", value : "Pour configurer l'heure de la 5v5, [valeur] contient le nouvel horaire de la 5v5"},
+                {name : "!tirage", value : "Pour effectuer le tirage au sort des teams, **A utiliser au moment où y'a les 10 votes des joueurs** "},
+                {name : "!reste", value : "Pour avoir la liste des joueurs en trop **Probablement la commande la plus chiante à coder mais ça arrivera** " },
+                {name : "!cmd", value : "Pour afficher la liste des commandes"},
+            )
+
+        msg.channel.send(embed)
+    }
+});
+
+Client.on("message", msg => {
+    let str = msg.content;
+    if(str.startsWith("!5v5")){
+        console.log(str);
+            let heure = "";
+            console.log(str.length);
+            if(str.length > 4){
+                for(ind = 5; ind<str.length;ind ++){
+                    let cpt2 = 0;
+                    heure += str[ind];
+                    cpt2 = cpt2 + 1;
+                    console.log(str[ind]);
+                }
+                console.log(heure);
+            }
+        let debut = "@everyone, préparation d'une 5v5";
+        if(str.length > 4){
+            debut = debut + " à " + heure;
+        }else{
+            debut = debut + "...";
+        }
+        debut = debut + " \nVotez avec cette réaction:";
+        msg.channel.send(debut).then(sentMessage =>{
+
+            sentMessage.react('👍');
+            let liste = ['Bot'];
+            let cpt= 0;
+            const filter = (reaction,user) => {
+                return ['👍'].includes(reaction.emoji.name) && !user.bots;
+
+            };
+
+            const collector = sentMessage.createReactionCollector(filter, {
+                max : 11,
+                dispose : true
+            });
+
+            collector.on('remove', (reaction, user) => {
+                for(ind = 0; ind<15; ind ++){
+                    if(liste[ind] === `${user.tag}`){
+                        liste.splice(ind, 1);
+                        ind = 15;
+                    }
+                }
+                cpt = cpt - 1;
+            });
+
+            collector.on('collect', (reaction,user) => {
+                liste.push(`${user.tag}`);
+                console.log(liste[cpt]);
+                cpt = cpt + 1;
+
+
+            });
+
+            let str2 = "";
+            Client.on('message', message => {
+                str2 = message.content;
+                if(str2.startsWith("!heure")){
+                    if(str2.length > 6){
+                        heure = "";
+                		for(ind = 7; ind<str2.length;ind ++){
+                    		let cpt3 = 0;
+                    		heure += str2[ind];
+                    		cpt3 = cpt3 + 1;
+                        }
+                        message.channel.send("L'horaire de la 5v5 a été changé pour : " + heure );
+                    }else{
+                        message.channel.send("T'as pas mis une heure pd");
+                    }
+                }
+            });
+
+            Client.on('message', message => {
+                if(message.content === "!info"){
+                    console.log(cpt);
+                    const embed2 = new Discord.MessageEmbed()
+                        .setTitle("Récapitulatif du 5v5")
+                        .setColor('#FFFF00')
+                    	.setFooter(heure)
+                    switch(cpt) {
+                        case 1:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : "Aucun joueur d'inscrit"},
+                            );
+                            break;
+
+                        case 2:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2]},
+                            );
+                            break;
+
+                        case 3:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3]},
+                            );
+                            break;
+
+                        case 4:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3] + "\n" + liste[4]},
+                            );
+                            break;
+
+                        case 5:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3] + "\n" + liste[4] + "\n" + liste[5]},
+                            );
+                            break;
+
+                        case 6:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3] + "\n" + liste[4] + "\n" + liste[5] + "\n" + liste[6]},
+                            );
+                            break;
+
+                        case 7:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3] + "\n" + liste[4] + "\n" + liste[5] + "\n" + liste[6] + "\n" + liste[7]},
+                            );
+                            break;
+
+                        case 8:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3] + "\n" + liste[4] + "\n" + liste[5] + "\n" + liste[6] + "\n" + liste[7] + "\n" + liste[8]},
+                            );
+                            break;
+
+                        case 9:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3] + "\n" + liste[4] + "\n" + liste[5] + "\n" + liste[6] + "\n" + liste[7] + "\n" + liste[8] + "\n" + liste[9]},
+                            );
+                            break;
+
+                        case 10:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[2] + "\n" + liste[3] + "\n" + liste[4] + "\n" + liste[5] + "\n" + liste[6] + "\n" + liste[7] + "\n" + liste[8] + "\n" + liste[9] + "\n" + liste[10]},
+                            );
+                            break;
+
+                        case 30:
+                            embed2.addFields(
+                                { name : "Liste de joueurs inscrits :", value : liste[0] + "\n" + liste[1] + "\n" + liste[2] + "\n" + liste[3] + "\n" + liste[4] + "\n" + liste[5] + "\n" + liste[6] + "\n" + liste[7] + "\n" + liste[8] + "\n" + liste[9] },
+                            );
+                            break;
+
+
+
+
+                    }
+                    /* if(cpt != 30){
+                    message.channel.send(embed2);
+                    }*/
+                    message.channel.send(embed2);
+                }
+
+            });
+
+
+            Client.on('message', message => {
+                	if(message.content === "!tirage"){
+                    	if(cpt === 30){
+        					const shuffledListe2 = liste.sort((a, b) => 0.5 - Math.random());
+
+
+       						const embed = new Discord.MessageEmbed()
+                        		.setTitle("Voici les teams :")
+                    	    	.setAuthor("On est 10, LET'S GOOOO !")
+                    			.setColor('#FFFF00')
+                        		.addFields(
+                                    {name : "Première team :", value : ( ":one: " + "@" + shuffledListe2[0] + "\n" +":one: " + "@" + 								shuffledListe2[1] + "\n" + ":one: " + "@" + shuffledListe2[2] +"\n" + ":one: " + "@" + shuffledListe2[3] + "\n" + ":one: " + "@" + shuffledListe2[4] +"\n")},
+                                    {name : "Deuxième team :", value : (":two: " + "@" + shuffledListe2[5] + "\n" + ":two: " + "@" + shuffledListe2[6] +"\n" + ":two: " + "@" + shuffledListe2[7] + "\n" + ":two: " + "@" +shuffledListe2[8] + "\n" + ":two: " + "@" + shuffledListe2[9])
+                                    },
+                                )
+                                .setFooter("Si les équipes ne sont pas équitables, vous pouvez refaire un !tirage")
+
+
+                    		msg.channel.send(embed);
+
+    				}else{
+                    message.channel.send("Il n'y a pas encore 10 votes de joueur trou de balle t'essayes de faire quoi pd");
+                    return;
+                    }
+                    }
+			});
+
+            collector.on('end', (collected, reason) => {
+                if (reason === 'time') {
+                    msg.reply('Ran out of time ☹...');
+                  } else {
+                    // Grab the first reaction in the array
+                    let userReaction = collected.array()[0];
+                    // Grab the name of the reaction (which is the emoji itself)
+                    let emoji = userReaction._emoji.name;
+                    liste.shift();
+                    liste.shift();
+                    msg.channel.send("La 5v5 est maintenant complète, à vous de faire !tirage pour faire les teams")
+
+					cpt = 30;
+
+
+
+
+                  }
+            });
+
+
+
+
+        });
+
+
+    }
+});
+
+
+
+
+// set message listener
+Client.on('message', message => {
+    switch(message.content.toUpperCase()) {
+        case '?RESET': {
+            message.channel.send('Restarting...');
+        Client.destroy();
+          Client.login(token);
+            break;
+
+        // ... other commands
+    };
+    };
+});
+
+Client.login(ODQ4MTE3MTQ0ODM5Mzg5MjI0.YLH8pA.GEIM6s7NxmczBgUjqmFJuQ4Mc_Y);
